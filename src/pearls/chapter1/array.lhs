@@ -5,7 +5,7 @@ The array solution of find the smallest number in a finite set X of
 natural numbers.
 
 Need to import this for the solution. See documentation here
-http://www.haskell.org/ghc/docs/6.12.2/html/libraries/array-0.3.0.0/Data-Array-IArray.html
+<a href="http://www.haskell.org/ghc/docs/6.12.2/html/libraries/array-0.3.0.0/Data-Array-IArray.html">Data.Array</a>
 
 > import Data.Array
 
