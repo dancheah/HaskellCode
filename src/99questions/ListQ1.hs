@@ -16,3 +16,16 @@ myButLast (x:xs) = myButLast(xs)
 -- Problem 3
 -- (*) Find the K'th element of a list. The first element in the list is number 1.
 elementAt list element = list !! (element - 1)
+
+-- Problem 4
+-- (*) Find the number of elements of a list.
+myLength []     = 0
+myLength (x:xs) = 1 + myLength(xs)
+
+
+-- Problem 5
+-- (*) Reverse a list.
+myReverse :: [a] -> [a]
+myReverse []     = []
+myReverse (x:xs) = myReverse(xs) ++ [x]
+
