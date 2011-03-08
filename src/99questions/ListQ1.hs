@@ -29,3 +29,10 @@ myReverse :: [a] -> [a]
 myReverse []     = []
 myReverse (x:xs) = myReverse(xs) ++ [x]
 
+-- Problem 6
+-- Problem 6
+-- (*) Find out whether a list is a palindrome. A palindrome can 
+-- be read forward or backward; e.g. (x a m a x).
+isPalindrome list = reverse list == list
+
+
