@@ -34,6 +34,13 @@ myReverse (x:xs) = myReverse(xs) ++ [x]
 -- be read forward or backward; e.g. (x a m a x).
 isPalindrome list = reverse list == list
 
+-- Problem 7
+-- (**) Flatten a nested list structure.
+data MyList a = Elem a | List [MyList a] 
+my_flatten :: MyList a -> [a]
+my_flatten (Elem x) = [x]
+my_flatten (List x) = concat $ map my_flatten x
+
 -- Problem 8
 -- (**) Eliminate consecutive duplicates of list elements.
 -- If a list contains repeated elements they should be replaced with 
@@ -49,7 +56,16 @@ compress list = compress' (tail list) (head list)
 -- Problem 9
 -- (**) Pack consecutive duplicates of list elements into sublists. 
 -- If a list contains repeated elements they should be placed in separate sublists.
--- pack :: [a] -> [a]
+-- pack :: (Eq a) => [a] -> [[a]]
+-- pack list = 
+--   pack' (head list) (tail list)
+--     where
+--     pack' x' [] = []
+--     pack' x' (x:xs) = if x == x'
+--                       then ()
+--                       else ()
+                
+
 
 -- Problem 10
 -- (*) Run-length encoding of a list. Use the result of problem P09 to 
