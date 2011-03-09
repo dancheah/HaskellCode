@@ -56,15 +56,14 @@ compress list = compress' (tail list) (head list)
 -- Problem 9
 -- (**) Pack consecutive duplicates of list elements into sublists. 
 -- If a list contains repeated elements they should be placed in separate sublists.
--- pack :: (Eq a) => [a] -> [[a]]
--- pack list = 
---   pack' (head list) (tail list)
---     where
---     pack' x' [] = []
---     pack' x' (x:xs) = if x == x'
---                       then ()
---                       else ()
-                
+-- Learnt this from the solution to 8 - Just use Data.List.group
+pack :: (Eq a) => [a] -> [[a]]
+pack [] = []
+pack list = 
+  let x = head list
+      (prefix, remainder) = span (\f -> f == x) list
+  in prefix : pack remainder
+                  
 
 
 -- Problem 10
