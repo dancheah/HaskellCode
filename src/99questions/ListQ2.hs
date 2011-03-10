@@ -3,7 +3,15 @@
 -- Modify the result of problem 10 in such a way that if an element has no 
 -- duplicates it is simply copied into the result list. Only elements with duplicates 
 -- are transferred as (N E) lists.
-
+data Encoding a = Single a | Multiple Int a deriving (Show)
+encodeModified :: (Eq a) => [a] -> [Encoding a]
+encodeModified [] = []
+encodeModified l = let x = head l
+                       (prefix, remainder) = span (\f -> f == x) l
+                   in
+                    if (length prefix) == 1 
+                    then (Single x) : (encodeModified remainder)
+                    else (Multiple (length prefix) x) : (encodeModified remainder)
 
 -- Problem 12
 -- (**) Decode a run-length encoded list.
