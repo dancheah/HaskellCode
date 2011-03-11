@@ -66,7 +66,16 @@ dropEvery l n = (take (n-1) l) ++ (dropEvery (drop n l) n)
 -- Problem 17
 -- (*) Split a list into two parts; the length of the first part is given.
 -- Do not use any predefined predicates.
-
+-- split1 using predicates was pretty easy. Needed some help with the
+-- one that doesn't have predicates.
+split :: [a] -> Int -> ([a], [a])
+split [] _     = ([], [])
+split (x:xs) n = let (prefix, remainder) = split xs (n - 1) 
+                  in if n > 0 then (x : prefix, remainder)
+                     else ([], x:xs)
+  
+split1 :: [a] -> Int -> ([a], [a])
+split1 l n = (take n l, drop n l)
 
 -- Problem 18
 -- (**) Extract a slice from a list.
