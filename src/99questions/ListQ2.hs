@@ -29,6 +29,21 @@ decodeModified (x:xs) =  case x of
 -- I.e. don't explicitly create the sublists containing the duplicates, as in problem 9, 
 -- but only count them. As in problem P11, simplify the result list by replacing 
 -- the singleton lists (1 X) by X.
+-- This particular problem kicked my ass but it helps one to  
+-- better understand foldr and as patterns.
+encode' :: (Eq a) => [a] -> [(Int, a)]
+encode' l = foldr encodeHelper [] l
+
+encodeHelper x [] = [(1, x)]
+encodeHelper x (y@(a,b):ys)
+  | x == b    = (1+a, x):ys
+  | otherwise = (1,x):y:ys
+  
+encodeDirect :: (Eq a) => [a] -> [Encoding a]
+encodeDirect = map f . encode'
+  where
+    f (1, x) = Single x
+    f (n, x) = Multiple n x
 
 -- Problem 14
 -- (*) Duplicate the elements of a list.
