@@ -7,7 +7,7 @@ data Encoding a = Single a | Multiple Int a deriving (Show)
 encodeModified :: (Eq a) => [a] -> [Encoding a]
 encodeModified [] = []
 encodeModified l = let x = head l
-                       (prefix, remainder) = span (\f -> f == x) l
+                       (prefix, remainder) = span (==x) l
                    in
                     if (length prefix) == 1 
                     then (Single x) : (encodeModified remainder)
@@ -17,6 +17,11 @@ encodeModified l = let x = head l
 -- (**) Decode a run-length encoded list.
 -- Given a run-length code list generated as specified in problem 11. 
 -- Construct its uncompressed version.
+decodeModified :: [Encoding a] -> [a]
+decodeModified [] = []
+decodeModified (x:xs) =  case x of
+  Single s -> s : decodeModified xs
+  Multiple i m -> (replicate i m) ++ (decodeModified xs)
 
 -- Problem 13
 -- (**) Run-length encoding of a list (direct solution).
