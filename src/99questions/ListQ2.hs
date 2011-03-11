@@ -82,6 +82,18 @@ split1 l n = (take n l, drop n l)
 -- Given two indices, i and k, the slice is the list containing the elements 
 -- between the i'th and k'th element of the original list (both limits included). 
 -- Start counting the elements with 1.
+-- There are some interesting solutions on the wiki that 
+-- don't look anything like mine. Mine is a very iterative
+-- solution using manual recursion.
+slice :: [a] -> Int -> Int -> [a]
+slice list start end = sliceHelper list 1 start end
+
+sliceHelper :: [a] -> Int -> Int -> Int -> [a]
+sliceHelper [] _ _ _ = []
+sliceHelper (x:xs) index start end = 
+  if (index >= start) && (index <= end) 
+  then x : sliceHelper xs (index + 1) start end
+  else sliceHelper xs (index + 1) start end
 
 -- Problem 19
 -- (**) Rotate a list N places to the left.
