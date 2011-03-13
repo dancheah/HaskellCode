@@ -106,5 +106,7 @@ rotate l n = let len = length l
 
 -- Problem 20
 -- (*) Remove the K'th element from a list.
-
+removeAt :: Int -> [a] -> [a]
+removeAt n (x:xs) = if n == 0 then xs
+                    else x : removeAt (n - 1) xs
 
