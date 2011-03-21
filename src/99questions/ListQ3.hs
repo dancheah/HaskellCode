@@ -82,7 +82,8 @@ combinations' (current, remainder) n =
       in [ current : i | i <- newcombo ]
 -- Turns out my implementation is permutations not combinations
 
-
+-- This is a super elegant solution to the question found on the wiki. I got it after
+-- tracing through it for awhile. My head hurts.
 combinations1 :: Int -> [a] -> [[a]]
 combinations1 0 _ = [ [] ]
 combinations1 n xs = [ y:ys | y:xs' <- tails xs, ys <- combinations1 (n - 1) xs' ]
