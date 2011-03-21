@@ -1,4 +1,5 @@
 import System.Random
+import Data.List (tails)
 -- Third set of 99 haskell problems found here
 -- http://www.haskell.org/haskellwiki/99_questions/21_to_28
 
@@ -63,6 +64,7 @@ rnd_permu l@(x:xs) = do rnd <- randomRIO (0, length xs)
                              return $ sel : newl
 
 
+
 -- Problem 26
 -- Generate the combinations of K distinct objects chosen from the N elements of a list
 combinations :: Int -> [a] -> [[a]]
@@ -78,6 +80,13 @@ combinations' (current, remainder) n =
       candidates = [ pick remainder i | i <- [0..len] ]
       newcombo   = concat [ combinations' i (n - 1) | i <- candidates ]
       in [ current : i | i <- newcombo ]
+-- Turns out my implementation is permutations not combinations
+
+
+combinations1 :: Int -> [a] -> [[a]]
+combinations1 0 _ = [ [] ]
+combinations1 n xs = [ y:ys | y:xs' <- tails xs, ys <- combinations1 (n - 1) xs' ]
+
 
 
 -- Problem 27
