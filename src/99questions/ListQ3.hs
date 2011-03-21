@@ -43,3 +43,45 @@ rnd_select1 (x:xs) n =
                rest <- rnd_select1 xs (n-1)
                return (x : rest)
            else rnd_select1 xs n
+
+-- Problem 24
+-- Lotto: Draw N different random numbers from the set 1..M.
+-- Prelude System.Random>diff_select 6 49
+-- Prelude System.Random>[23,1,17,33,21,37]
+diff_select :: Int -> Int -> IO [Int]
+diff_select i n = rnd_select [1..n] i
+
+-- Problem 25
+-- Generate a random permutation of the elements of a list.
+-- Prelude>rnd_permu "abcdef"
+-- Prelude>"badcef"
+rnd_permu :: [a] -> IO [a]
+rnd_permu [] = return []
+rnd_permu l@(x:xs) = do rnd <- randomRIO (0, length xs)
+                        let (sel, rem) = pick l rnd in
+                          do newl <- rnd_permu rem
+                             return $ sel : newl
+
+
+-- Problem 26
+-- Generate the combinations of K distinct objects chosen from the N elements of a list
+combinations :: Int -> [a] -> [[a]]
+combinations n l =   let len = (length l) - 1
+                         candidates = [ pick l i | i <- [0..len] ]
+                     in concat [ combinations' i (n - 1) | i <- candidates ]
+
+
+combinations' :: (a, [a]) -> Int -> [[a]]
+combinations' (current, _) 0 = [ [current] ]
+combinations' (current, remainder) n =
+  let len = (length remainder) - 1
+      candidates = [ pick remainder i | i <- [0..len] ]
+      newcombo   = concat [ combinations' i (n - 1) | i <- candidates ]
+      in [ current : i | i <- newcombo ]
+
+
+-- Problem 27
+-- Group the elements of a set into disjoint subsets.
+
+-- Problem 28
+-- Sorting a list of lists according to length of sublists
