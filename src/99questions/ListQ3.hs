@@ -1,5 +1,5 @@
 import System.Random
-import Data.List (tails)
+import Data.List
 -- Third set of 99 haskell problems found here
 -- http://www.haskell.org/haskellwiki/99_questions/21_to_28
 
@@ -67,18 +67,18 @@ rnd_permu l@(x:xs) = do rnd <- randomRIO (0, length xs)
 
 -- Problem 26
 -- Generate the combinations of K distinct objects chosen from the N elements of a list
-combinations :: Int -> [a] -> [[a]]
-combinations n l =   let len = (length l) - 1
-                         candidates = [ pick l i | i <- [0..len] ]
-                     in concat [ combinations' i (n - 1) | i <- candidates ]
+perm :: Int -> [a] -> [[a]]
+perm n l = let len = (length l) - 1
+               candidates = [ pick l i | i <- [0..len] ]
+           in concat [ perm' i (n - 1) | i <- candidates ]
 
 
-combinations' :: (a, [a]) -> Int -> [[a]]
-combinations' (current, _) 0 = [ [current] ]
-combinations' (current, remainder) n =
+perm' :: (a, [a]) -> Int -> [[a]]
+perm' (current, _) 0 = [ [current] ]
+perm' (current, remainder) n =
   let len = (length remainder) - 1
       candidates = [ pick remainder i | i <- [0..len] ]
-      newcombo   = concat [ combinations' i (n - 1) | i <- candidates ]
+      newcombo   = concat [ perm' i (n - 1) | i <- candidates ]
       in [ current : i | i <- newcombo ]
 -- Turns out my implementation is permutations not combinations
 
@@ -88,10 +88,66 @@ combinations1 :: Int -> [a] -> [[a]]
 combinations1 0 _ = [ [] ]
 combinations1 n xs = [ y:ys | y:xs' <- tails xs, ys <- combinations1 (n - 1) xs' ]
 
-
+-- Another solution from the wiki. This one does the same as above but uses do notation.
+combinations2 :: Int -> [a] -> [[a]]
+combinations2 0 _  = return []
+combinations2 n xs = do y:xs' <- tails xs
+                        ys <- combinations2 (n-1) xs'
+                        return (y:ys)
 
 -- Problem 27
 -- Group the elements of a set into disjoint subsets.
+-- P27> group [2,3,4] ["aldo","beat","carla","david","evi","flip","gary","hugo","ida"]
+-- [[["aldo","beat"],["carla","david","evi"],["flip","gary","hugo","ida"]],...]
+combination :: Int -> [a] -> [([a], [a])]
+combination 0 xs = [([], xs)]
+combination _ [] = [] 
+combination n (x:xs) = ts ++ ds
+  where
+    ts = [ (x:ys, zs) | (ys,zs) <- combination (n - 1) xs ]
+    ds = [ (ys, x:zs) | (ys,zs) <- combination n       xs ]
 
--- Problem 28
+-- group is also in Data.List
+mygroup :: [Int] -> [a] -> [[[a]]]
+mygroup [] _ = [[]]
+mygroup (n:ns) xs = [ g:gs | (g, remainder) <- combination n xs, gs <- mygroup ns remainder ]
+
+group3 :: [a] -> [[[a]]]
+group3 xs = mygroup [2,3,4] xs
+
+-- 27> group [2,2,5] ["aldo","beat","carla","david","evi","flip","gary","hugo","ida"]
+-- [[["aldo","beat"],["carla","david"],["evi","flip","gary","hugo","ida"]],...]
+
+
+-- Problem 28a)
 -- Sorting a list of lists according to length of sublists
+lsort :: [[a]] -> [[a]]
+lsort l = sortBy f l 
+  where
+    f x y
+      | (length x) > (length y) = GT 
+      | (length x) < (length y) = LT
+      | otherwise = EQ
+                    
+-- b) Again, we suppose that a list contains elements that are lists themselves. 
+-- But this time the objective is to sort the elements of this list according to 
+-- their length frequency
+-- This is a solution. The solution is more elegant with the use of groupBy
+-- found in Data.List
+lfsort :: [[a]] -> [[a]]
+lfsort list = lfsort1 list freqs
+  where
+    freqs = map head $ lsort $ group $ sort $ map length list -- sort the frequencies in the list
+
+-- Helper function. Probably a better way to do this.
+lfsort1 :: [[a]] -> [Int] -> [[a]]
+lfsort1 _ [] = []
+lfsort1 l (x:xs) = sublist ++ lfsort1 l xs
+  where sublist = filter (\n -> length n == x) l
+    
+lfsort_wiki :: [[a]] -> [[a]]
+lfsort_wiki lists = concat groups 
+  where groups = lsort $ groupBy equalLength $ lsort lists
+        equalLength xs ys = length xs == length ys
+           
+
